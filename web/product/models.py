@@ -65,7 +65,7 @@ class CategoryManager(models.Manager):
 class Category(models.Model):
 
     name = models.CharField(max_length=255, verbose_name='Имя категории')
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, allow_unicode=True)
     objects = CategoryManager()
 
     def __str__(self):
@@ -73,6 +73,10 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse('category_detail', kwargs={'slug': self.slug})
+
+    def save(self, **kwargs):
+        self.slug = slugify(self.name, allow_unicode=True)
+        return super().save(**kwargs)
 
 
 def validate_image(img):
@@ -93,13 +97,10 @@ class Product(models.Model):
     category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.CASCADE, related_name='product_set')
     title = models.CharField(max_length=255, verbose_name='Наименование')
     slug = models.SlugField(unique=True, allow_unicode=True)
-    image = models.ImageField(verbose_name='Изображение', validators=(validate_image,))
+    image = models.ImageField(verbose_name='Изображение', validators=(validate_image,), default='загрузка_1.jpg', blank=True)
     description = models.TextField(verbose_name='Описание', null=True)
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Цена')
     objects = models.Manager()
-
-    def __str__(self):
-        return self.title
 
     def __str__(self):
         return "{} : {}".format(self.category.name, self.title)

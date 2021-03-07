@@ -3,6 +3,7 @@
 from django.db import migrations
 from django.contrib.auth.hashers import make_password
 from django.conf import settings
+from allauth.account.models import EmailAddress
 
 
 def set_superuser(apps, schema_editor):
@@ -18,6 +19,7 @@ def set_superuser(apps, schema_editor):
         password=make_password(settings.SUPERUSER_PASSWORD)
     )
     user.save()
+    user.emailaddress_set.create(email=user.email, primary=True, verified=True)
 
 
 class Migration(migrations.Migration):
