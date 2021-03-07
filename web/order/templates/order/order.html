@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3 class="text-center mt-5 mb-5">Ваш заказ</h3>
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{ message }}</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endif %}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Заказ</th>
+        <th scope="col">Цена</th>
+         <th scope="col">Продукт</th>
+        <th scope="col">Количество</th>
+        <th scope="col">Адрес</th>
+        <th scope="col">Оплачено</th>
+        <th scope="col">Время</th>
+        <th scope="col">Действие</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in orders %}
+    <tr>
+
+        <td>{{ user.username }} руб.</td>
+        <td>{{ item.price }} руб.</td>
+        <td>{{ item.product }} </td>
+        <td>{{ user.quantity }} </td>
+        <td>{{ item.address }}</td>
+        <td>{{ item.is_paid }} </td>
+        <td>{{ item.created }} </td>
+        <td>
+            <form action="{% url 'change_qty' slug=product.slug %}"
+                  method="POST">
+                {% csrf_token %}
+                <input type="number" class="form-control" name="qty" style="width: 70px;" min="1"
+                       value="{{ item.quantity }}">
+                <br>
+                <input type="submit" class="btn btn-primary" value="Изменить кол-во">
+            </form>
+
+            <a href="{% url 'delete_from_cart' slug=product.slug %}">
+                <button class="btn btn-danger">Удалить заказ</button>
+
+            </a>
+
+
+        </td>
+
+    </tr>
+
+
+    {% endfor %}
+
+
+    </tbody>
+</table>
+
+{% endblock content %}
+
+
+<th scope="row"><a href="{{ product.get_absolute_url }}">{{ product.title }}</a></th>
+        <td class="w-25"><img src="{{ product.image.url }}" class="img-fluid"></td>
