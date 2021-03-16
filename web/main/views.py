@@ -32,6 +32,7 @@ class SendEmailView(View):
         send_mail(subject=subject, message=message, recipient_list=recipients, from_email=email_from)
         return render(request, template_name='base.html')
 
+
 class BaseView(View):
 
     def get(self, request, *args, **kwargs):
@@ -40,4 +41,6 @@ class BaseView(View):
             'products': products,
             # 'cart': self.cart
         }
+        print(args) #['t', 1, 100]
+        print(kwargs)#{'subject': subject, 'recipient_list': recipients}
         return render(request, 'index.html', context)

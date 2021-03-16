@@ -30,6 +30,7 @@ class ProdAdminForm(ModelForm):
         return image
 
 
+@admin.register(Product)
 class ProdAdmin(admin.ModelAdmin):
 
     form = ProdAdminForm
@@ -43,6 +44,5 @@ class ProdAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Category)
-admin.site.register(Product, ProdAdmin)
 admin.site.register(Customer)
 

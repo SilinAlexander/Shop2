@@ -47,7 +47,7 @@ class SessionCart:
         products_id = cart.keys()
         products = Product.objects.filter(id__in=products_id)
         print(products)
-        total = {
+        total: dict = {
             'final_price': 0,
             'count': 0
         }
