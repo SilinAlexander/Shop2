@@ -1,30 +1,9 @@
-"""
-Example API endpoint with Swagger documentation:
 
-    class ExampleViewSet(viewsets.ViewSet):
-
-        @swagger_auto_schema(responses=schemas.response_schema_dict)
-        def list(self, request):
-            '''
-            Example API for retrieving users list.
-
-                Access for all.
-
-                Example enum description:
-                    IN_PROGRESS = 1
-                    REJECTED = 2
-                    CLOSED = 3
-            '''
-            queryset = User.objects.all()
-            serializer = UserSerializer(queryset, many=True)
-            return Response(serializer.data)
-"""
 from rest_framework import views
 from rest_framework import viewsets
 from rest_framework import generics
 from rest_framework import mixins
-from drf_yasg.utils import swagger_auto_schema
-
+from rest_framework.generics import GenericAPIView
 from . import services
 from . import serializers
 from . import swagger_schemas as schemas
@@ -35,6 +14,8 @@ from django.views.generic import DetailView, CreateView
 from .forms import UserAddressForm, ChangePassword
 from allauth.account.views import PasswordChangeView
 from .tasks import hard_task
+from .serializers import UserSerializer
+from rest_framework.response import Response
 
 User = get_user_model()
 
@@ -88,3 +69,13 @@ class ChangePasswordView(PasswordChangeView):
         return reverse_lazy('profile:profile', kwargs={'pk': self.kwargs.get('pk')})
 
 
+class UserView(GenericAPIView):
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return self.request.user
+
+    def get(self, request):
+        object = self.get_object()
+        serializer = self.get_serializer(object)
+        return Response(data=serializer.data)
