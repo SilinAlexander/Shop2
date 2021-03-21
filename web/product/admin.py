@@ -42,6 +42,10 @@ class ProdAdmin(admin.ModelAdmin):
         #     return ModelChoiceField(Category.objects.filter(slug='prod1s'))
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
+    def get_queryset(self, request):
+
+        return super(ProdAdmin, self).get_queryset(request).select_related('category')
+
 
 admin.site.register(Category)
 admin.site.register(Customer)

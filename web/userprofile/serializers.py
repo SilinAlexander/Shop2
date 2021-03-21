@@ -14,7 +14,7 @@ class AddressSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(source='profile_set.image')
     phone = serializers.CharField(source='profile_set.phone')
-    # address = AddressSerializer(source='profile_set.address_set', many=True)
+    address = AddressSerializer(source='profile_set.address_set', many=True)
 
     class Meta:
         model = User
@@ -25,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
             'password',
             'image',
             'phone',
-            # 'address'
+            'address'
         )
 
-        depth = 2
+        # depth = 2

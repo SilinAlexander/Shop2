@@ -3,7 +3,7 @@ from rest_framework import views
 from rest_framework import viewsets
 from rest_framework import generics
 from rest_framework import mixins
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, get_object_or_404
 from . import services
 from . import serializers
 from . import swagger_schemas as schemas
@@ -72,10 +72,24 @@ class ChangePasswordView(PasswordChangeView):
 class UserView(GenericAPIView):
     serializer_class = UserSerializer
 
+    def get_queryset(self):
+        return User.objects.all().select_related('profile_set').prefetch_related('profile_set__address_set')
+
     def get_object(self):
-        return self.request.user
+        obj = get_object_or_404(self.get_queryset(), id=self.request.user.id)
+
+        # May raise a permission denied
+        self.check_object_permissions(self.request, obj)
+
+        return obj
 
     def get(self, request):
         object = self.get_object()
         serializer = self.get_serializer(object)
+        return Response(data=serializer.data)
+
+
+class AllUserView(UserView):
+    def get(self, request):
+        serializer = self.get_serializer(self.get_queryset(), many=True)
         return Response(data=serializer.data)
