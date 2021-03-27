@@ -4,7 +4,10 @@ from django.views.generic.base import View
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import ListModelMixin
 from .models import Product, Category
-from .serializers import CategorySerializer
+from .serializers import CategorySerializer, ProductSerializer
+from rest_framework.viewsets import ModelViewSet
+from .pagination import ProductPagination
+from .filters import ProductFilter
 
 
 class ProductDetailView(DetailView):
@@ -45,4 +48,17 @@ class CategoryView(ListModelMixin, GenericAPIView):
 
     def get_queryset(self):
         return Category.objects.all().prefetch_related('product_set')
+
+
+class ProductViewSet(ModelViewSet):
+    serializer_class = ProductSerializer
+    lookup_field = 'slug'
+    pagination_class = ProductPagination
+    filterset_class = ProductFilter
+
+    def get_queryset(self):
+        return Product.objects.all().select_related('category')
+
+
+
 

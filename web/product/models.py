@@ -106,7 +106,7 @@ class Product(models.Model):
         return "{} : {}".format(self.category.name, self.title)
 
     def get_absolute_url(self):
-        return reverse_lazy('product_detail', kwargs={'slug': self.slug})
+        return reverse_lazy('products-detail', kwargs={'slug': self.slug})
 
     def get_model_name(self):
         return self.__class__._meta.model_name

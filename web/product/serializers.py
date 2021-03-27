@@ -11,4 +11,14 @@ class CategorySerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class ProductSerializer(serializers.ModelSerializer):
+    category_id = serializers.IntegerField(write_only=True, min_value=1)
+
+    class Meta:
+        model = Product
+        fields = ('title', 'get_absolute_url', 'description', 'category', 'price', 'category_id')
+
+        depth = 1
+
+
 

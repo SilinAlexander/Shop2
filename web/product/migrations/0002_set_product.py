@@ -2,8 +2,6 @@
 from django.conf import settings
 from django.db import migrations
 
-
-
 products = {
     'category 1': [
         {
@@ -27,9 +25,6 @@ def set_products(apps, scheme_editor):
         categ_obj = apps.get_model('category', 'Category')
         for p in products:
             prod_obj = apps.get_model('product', 'Product')
-
-
-
 
 
 class Migration(migrations.Migration):
