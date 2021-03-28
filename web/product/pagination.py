@@ -6,3 +6,10 @@ class ProductPagination(PageNumberPagination):
     max_page_size = 20
     page_query_param = 'page'
     page_size_query_param = 'page_size'
+
+
+class CategoryPagination(PageNumberPagination):
+    page_size = 2
+    max_page_size = 20
+    page_query_param = 'page'
+    page_size_query_param = 'page_size'

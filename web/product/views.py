@@ -4,10 +4,10 @@ from django.views.generic.base import View
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import ListModelMixin
 from .models import Product, Category
-from .serializers import CategorySerializer, ProductSerializer
+from .serializers import CategorySerializer, ProductSerializer, BaseCategorySerializer
 from rest_framework.viewsets import ModelViewSet
-from .pagination import ProductPagination
-from .filters import ProductFilter
+from .pagination import ProductPagination, CategoryPagination
+from .filters import ProductFilter, CategoryFilter
 
 
 class ProductDetailView(DetailView):
@@ -40,14 +40,14 @@ class CategoryDetailView(DetailView):
         return context
 
 
-class CategoryView(ListModelMixin, GenericAPIView):
-    serializer_class = CategorySerializer
-
-    def get(self, request):
-        return self.list(request)
-
-    def get_queryset(self):
-        return Category.objects.all().prefetch_related('product_set')
+# class CategoryView(ListModelMixin, GenericAPIView):
+#     serializer_class = CategorySerializer
+#
+#     def get(self, request):
+#         return self.list(request)
+#
+#     def get_queryset(self):
+#         return Category.objects.all().prefetch_related('product_set')
 
 
 class ProductViewSet(ModelViewSet):
@@ -55,9 +55,30 @@ class ProductViewSet(ModelViewSet):
     lookup_field = 'slug'
     pagination_class = ProductPagination
     filterset_class = ProductFilter
+    http_method_names = ('get', 'put', 'post', 'delete')
 
     def get_queryset(self):
         return Product.objects.all().select_related('category')
+
+
+class CategoryViewSet(ModelViewSet):
+    serializer_class = CategorySerializer
+    lookup_field = 'slug'
+    pagination_class = CategoryPagination
+    filterset_class = CategoryFilter
+    http_method_names = ('get', 'put', 'post', 'delete')
+
+    def get_queryset(self):
+        return Category.objects.all().prefetch_related('product_set')
+
+    def category_list(self, request):
+        return self.list(request)
+
+    def get_serializer_class(self):
+        if self.action == 'category_list':
+            return BaseCategorySerializer
+        return CategorySerializer
+
 
 
 
