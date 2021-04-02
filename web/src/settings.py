@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django_countries',
+    'django_treebeard',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
