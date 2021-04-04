@@ -6,6 +6,9 @@ from .additional_settings.defender_settings import *
 from .additional_settings.swagger_settings import *
 from .additional_settings.jwt_settings import *
 
+# ROOT = os.path.abspath(os.path.dirname(__file__))
+# path = lambda *args: os.path.join(ROOT, *args)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
@@ -45,10 +48,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django_countries',
-    'django_treebeard',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+
 
 
     'defender',
@@ -106,6 +109,11 @@ TEMPLATES = [
     },
 ]
 
+# TEMPLATE_DIRS = (
+#     path('templates'),
+#     path('feincms/templates'),
+# )
+
 WSGI_APPLICATION = 'src.wsgi.application'
 ASGI_APPLICATION = 'src.asgi.application'
 
@@ -152,6 +160,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# ADMIN_MEDIA_PREFIX = '/media/'
+# FEINCMS_ADMIN_MEDIA = '/static/feincms/'
+# FEINCMS_ADMIN_MEDIA_LOCATION = path('static/feincms/')
+
 
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),

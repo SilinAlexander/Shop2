@@ -40,16 +40,6 @@ class CategoryDetailView(DetailView):
         return context
 
 
-# class CategoryView(ListModelMixin, GenericAPIView):
-#     serializer_class = CategorySerializer
-#
-#     def get(self, request):
-#         return self.list(request)
-#
-#     def get_queryset(self):
-#         return Category.objects.all().prefetch_related('product_set')
-
-
 class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
     lookup_field = 'slug'

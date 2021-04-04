@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse, reverse_lazy
 from django.utils.text import slugify
-from treebeard.mp_tree import MP_Node
+
 
 
 User = get_user_model()
