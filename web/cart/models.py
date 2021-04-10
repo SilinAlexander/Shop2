@@ -9,7 +9,7 @@ User = get_user_model()
 
 class UserCart(models.Model):
 
-    owner = models.OneToOneField(User, null=True, verbose_name='Владелец', on_delete=models.CASCADE)
+    owner = models.OneToOneField(User, null=True, verbose_name='Владелец', on_delete=models.CASCADE, related_name='usercart_set')
 
     def __str__(self):
         return str(self.id)
@@ -27,7 +27,11 @@ class Cart(models.Model):
     # final_price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Общая цена')
     added = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated = models.DateTimeField(auto_now=True)
+    price = models.DecimalField(max_digits=9, decimal_places=2)
+
+    class Meta:
+        unique_together = ('user_cart', 'product')
 
     def __str__(self):
-        return "Продукт: {} (для корзины)".format(self.product.name)
+        return "Продукт: {} (для корзины)".format(self.product.title)
 

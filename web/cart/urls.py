@@ -9,6 +9,7 @@ urlpatterns = [
     path('delete-from-cart/<slug>/', views.DeleteFromCartView.as_view(), name='delete_from_cart'),
     path('change-qty/<str:slug>/', views.ChangeQTYView.as_view(), name='change_qty'),
     path('usercart/', views.GetProductInCartView.as_view()),
-    path('usercart/add/', views.AddProductTOCartView.as_view())
+    path('usercart/add/', views.AddProductToCartView.as_view()),
+    path('delete/<product_id>/', views.DeleteProductFromCartView.as_view())
 
 ]

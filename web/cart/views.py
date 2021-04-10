@@ -4,11 +4,13 @@ from django.shortcuts import render, get_object_or_404
 from django.views import View
 from .cart import SessionCart
 from product.models import Product
-from .models import UserCart
+from .models import UserCart, Cart
 from .tasks import add_to_cart
 from rest_framework.generics import GenericAPIView
 from .serializers import UserCartSerializer, CartSerializer
 from rest_framework.response import Response
+from rest_framework import status
+from .filters import CartFilter
 
 
 class ProductInCart(View):
@@ -79,9 +81,11 @@ class ChangeQTYView(View):
 class GetProductInCartView(GenericAPIView):
 
     serializer_class = UserCartSerializer
+    filterset_class = CartFilter
 
     def get_object(self):
-        return get_object_or_404(self.get_queryset(), owner=self.request.user)
+        queryset = self.filter_queryset(self.get_queryset())
+        return get_object_or_404(queryset, owner=self.request.user)
 
     def get_queryset(self):
         return UserCart.objects.all().prefetch_related('cart_set')
@@ -92,7 +96,7 @@ class GetProductInCartView(GenericAPIView):
         return Response(serializer.data)
 
 
-class AddProductTOCartView(GenericAPIView):
+class AddProductToCartView(GenericAPIView):
     serializer_class = CartSerializer
 
     def post(self, request):
@@ -101,4 +105,15 @@ class AddProductTOCartView(GenericAPIView):
         serializer.save()
         return Response(serializer.data)
 
+
+class DeleteProductFromCartView(GenericAPIView):
+
+    def get_object(self):
+        return get_object_or_404(Cart, product_id=self.kwargs.get('product_id'))
+
+    def delete(self, request, product_id):
+
+        obj = self.get_object()
+        obj.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
